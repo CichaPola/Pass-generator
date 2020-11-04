@@ -1,13 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap");
 
 #title {
-    height: 150px;
+    height: 100px;
     color: #e4e4e4;
-    font-size: 70px;
+    font-size: 30px;
     font-family: "Montserrat", sans-serif;
     text-align: left;
     margin-top: 38px;
-    padding-top: 25px;
+    padding-top: 30px;
     padding-left: 10%;
 }
 #addButton,
@@ -31,3 +31,18 @@
     width: 100%;
     height: 100%;
   }
+  @media only screen and (min-width:600px) {
+    #title {
+        padding-top: 50px;
+        font-size: 40px;
+        height: 150px;
+    }
+  }
+  @media only screen and (min-width:1080px) {
+    #title {
+        font-size: 70px;
+        padding-top: 25px;
+        height: 150px;
+        padding-top: 25px;
+    }
+}
