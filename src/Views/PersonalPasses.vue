@@ -6,47 +6,88 @@
     <Logout />
     <header id="title">Przepustki osobowe</header>
     <b-form id="form" class="needs-validation" novalidate>
-      <vue-typeahead-bootstrap
-        v-model="pass.name"
-        :data="nameData"
-        :state="nameState"
-        class="input"
-        placeholder="Imię: "
-        required
-      />
-      <vue-typeahead-bootstrap
-        :state="lastnameState"
-        class="input"
-        v-model="pass.lastname"
-        :data="lastnameData"
-        placeholder="Nazwisko: "
-        required
-      />
-
-      <vue-typeahead-bootstrap
-        :state="companyState"
-        class="input"
-        v-model="pass.company"
-        :data="companyData"
-        placeholder="Firma: "
-        required
-      />
-
-      <b-form-datepicker
-        :state="validFromState"
-        v-model="pass.validFrom"
-        class="mb-2 input"
-        placeholder="Ważne od"
-        required
-      ></b-form-datepicker>
-
-      <b-form-datepicker
-        :state="validToState"
-        v-model="pass.validTo"
-        class="mb-2 input"
-        placeholder="Ważne do"
-        required
-      ></b-form-datepicker>
+      <table>
+        <tr>
+          <td>
+            <vue-typeahead-bootstrap
+              v-model="pass.name"
+              :data="nameData"
+              :state="false"
+              class="input"
+              v-bind:class="[
+                { valid: nameState },
+                { invalid: nameState == false }
+              ]"
+              aria-invalid="true"
+              placeholder="Imię: "
+              required
+            />
+          </td>
+          <td class="info">
+            <p :class="{ colRed: nameCurrentLength > 20 }">
+              {{ nameCurrentLength }}/20
+            </p>
+          </td>
+        </tr>
+        <td>
+          <vue-typeahead-bootstrap
+            :state="lastnameState"
+            class="input"
+            v-bind:class="[
+              { valid: lastnameState },
+              { invalid: lastnameState == false }
+            ]"
+            v-model="pass.lastname"
+            :data="lastnameData"
+            placeholder="Nazwisko: "
+            required
+          />
+        </td>
+        <td class="info">
+          <p :class="{ colRed: lastnameCurrentLength > 20 }">
+            {{ lastnameCurrentLength }}/20
+          </p>
+        </td>
+        <tr>
+          <td>
+            <vue-typeahead-bootstrap
+              :state="companyState"
+              class="input"
+              v-bind:class="[
+                { valid: companyState },
+                { invalid: companyState == false }
+              ]"
+              v-model="pass.company"
+              :data="companyData"
+              placeholder="Firma: "
+              required
+            />
+          </td>
+          <td class="info">
+            <p :class="{ colRed: companyCurrentLength > 20 }">
+              {{ companyCurrentLength }}/20
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <b-form-datepicker
+            :state="validFromState"
+            v-model="pass.validFrom"
+            class="mb-2 input"
+            placeholder="Ważne od"
+            required
+          ></b-form-datepicker>
+        </tr>
+        <tr>
+          <b-form-datepicker
+            :state="validToState"
+            v-model="pass.validTo"
+            class="mb-2 input"
+            placeholder="Ważne do"
+            required
+          ></b-form-datepicker>
+        </tr>
+      </table>
     </b-form>
 
     <div id="buttons">
@@ -193,31 +234,40 @@ export default {
       return pass;
     },
     nameData() {
-      let data=[];
-      for(let elem of this.passesArray) {
+      let data = [];
+      for (let elem of this.passesArray) {
         data.push(elem.name);
       }
       return data;
     },
     lastnameData() {
-      let data=[];
-      for(let elem of this.passesArray) {
+      let data = [];
+      for (let elem of this.passesArray) {
         data.push(elem.lastname);
       }
       return data;
     },
     companyData() {
-      let data=[];
-      for(let elem of this.passesArray) {
+      let data = [];
+      for (let elem of this.passesArray) {
         data.push(elem.company);
       }
       return data;
+    },
+    nameCurrentLength() {
+      return this.pass.name.length;
+    },
+    lastnameCurrentLength() {
+      return this.pass.lastname.length;
+    },
+    companyCurrentLength() {
+      return this.pass.company.length;
     }
   },
   methods: {
     async addPass() {
       await this.fillingValidation();
-      await this.numOfcharValidation();
+      await this.numOfCharValidation();
       if (this.valid == true) {
         this.pass.validFrom = this.formatDate(this.pass.validFrom);
         this.pass.validTo = this.formatDate(this.pass.validTo);
@@ -425,7 +475,7 @@ export default {
         this.validFromState = true;
       }
     },
-    numOfcharValidation() {
+    numOfCharValidation() {
       if (this.pass.name.length > 20) {
         this.valid = false;
         this.nameState = false;
@@ -435,7 +485,7 @@ export default {
         this.valid = false;
         this.lastnameState = false;
         alert("Za duża ilość znaków!");
-      } 
+      }
       if (this.pass.company.length > 20) {
         this.valid = false;
         this.companyState = false;
@@ -468,7 +518,7 @@ export default {
 </script>
 
 <style scoped>
-@import '../style.css';
+@import "../style.css";
 
 .input {
   width: 550px;
@@ -504,5 +554,27 @@ export default {
 #carPasses {
   position: absolute;
   right: 4%;
+}
+.invalid {
+  border: 1px solid red !important;
+  border-radius: 0.25rem;
+}
+.valid {
+  border: 1px solid #28a745 !important;
+  border-radius: 0.25rem;
+}
+.info {
+  font-size: 12px;
+  margin: 0px;
+  padding: 0px;
+  color: #bbbecb;
+  vertical-align: bottom;
+  padding-left: 5px;
+}
+p {
+  margin-bottom: 0px;
+}
+.colRed {
+  color: red;
 }
 </style>
